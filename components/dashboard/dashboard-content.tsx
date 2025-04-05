@@ -5,6 +5,7 @@ import PurchaseList from "@/components/dashboard/purchase-list"
 import RecommendationCard from "@/components/dashboard/recommendation-card"
 import AddPurchaseButton from "@/components/dashboard/add-purchase-button"
 import ScraperForm from "@/components/dashboard/scraper-form"
+import { WalmartImport } from "@/components/walmart-import"
 import { Plus, ShoppingBag } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { EmptyState } from "@/components/ui/empty-state"
@@ -106,6 +107,13 @@ export function DashboardContent({ purchases, recommendation, userGoal }: Dashbo
           </Card>
 
           <ScraperForm />
+
+          <Card>
+            <CardContent className="p-6">
+              <h2 className="text-xl font-bold text-gray-800 mb-4">Import Walmart Data</h2>
+              <WalmartImport />
+            </CardContent>
+          </Card>
         </div>
       </div>
     </>

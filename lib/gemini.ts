@@ -83,3 +83,83 @@ export async function analyzeGroceryPurchases(purchases: any[], userGoal: string
   }
 }
 
+export interface WalmartTransaction {
+  orderNumber: string;
+  orderDate: string;
+  itemName: string;
+  quantity: number;
+  unitPrice: number;
+  subtotal: number;
+  tax: number;
+  total: number;
+  deliveryStatus: string;
+  deliveryCharges: number;
+  productLink: string;
+  category?: string;
+}
+
+export async function categorizeWalmartTransactions(transactions: WalmartTransaction[]) {
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+
+    // Prepare the transactions for categorization
+    const transactionData = transactions.map(transaction => ({
+      itemName: transaction.itemName,
+      quantity: transaction.quantity,
+      unitPrice: transaction.unitPrice
+    }));
+
+    const prompt = `
+      As a grocery categorization expert, analyze the following Walmart transactions and categorize each item into appropriate grocery categories.
+      
+      Transaction Items:
+      ${JSON.stringify(transactionData, null, 2)}
+      
+      Please categorize each item into one of these main categories:
+      - Produce
+      - Meat & Seafood
+      - Dairy & Eggs
+      - Bakery
+      - Pantry
+      - Frozen Foods
+      - Beverages
+      - Snacks
+      - Household
+      - Personal Care
+      - Baby Care
+      - Other
+      
+      Format your response as a JSON object where each item name maps to its category.
+      Example:
+      {
+        "Fresh Spinach": "Produce",
+        "Chicken Breasts": "Meat & Seafood",
+        "Orange Juice": "Beverages"
+      }
+    `;
+
+    const result = await model.generateContent(prompt);
+    const response = result.response;
+    const text = response.text();
+
+    // Parse the JSON response
+    const jsonMatch = text.match(/```json\n([\s\S]*?)\n```/) || text.match(/({[\s\S]*})/);
+    let categories;
+
+    if (jsonMatch && jsonMatch[1]) {
+      categories = JSON.parse(jsonMatch[1]);
+    } else {
+      categories = JSON.parse(text);
+    }
+
+    // Add categories to the transactions
+    return transactions.map(transaction => ({
+      ...transaction,
+      category: categories[transaction.itemName] || "Other"
+    }));
+  } catch (error) {
+    console.error("Error categorizing Walmart transactions:", error);
+    throw error;
+  }
+}
+
