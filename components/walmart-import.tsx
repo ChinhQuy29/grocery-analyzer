@@ -8,11 +8,13 @@ export function WalmartImport() {
   const [transactions, setTransactions] = useState<WalmartTransaction[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [savedPurchases, setSavedPurchases] = useState<number>(0);
 
   const handleImport = async () => {
     try {
       setLoading(true);
       setError(null);
+      setSavedPurchases(0);
       
       const response = await fetch('/api/import-walmart', {
         method: 'POST',
@@ -24,6 +26,7 @@ export function WalmartImport() {
 
       const data = await response.json();
       setTransactions(data.transactions);
+      setSavedPurchases(data.savedPurchases);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -40,6 +43,12 @@ export function WalmartImport() {
       {error && (
         <div className="text-red-500">
           Error: {error}
+        </div>
+      )}
+
+      {savedPurchases > 0 && (
+        <div className="text-green-600">
+          Successfully saved {savedPurchases} new purchases to your account!
         </div>
       )}
 
