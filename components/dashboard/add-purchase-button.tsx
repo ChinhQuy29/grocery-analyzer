@@ -124,7 +124,7 @@ export default function AddPurchaseButton() {
           <Plus className="mr-2 h-4 w-4" /> Add Purchase
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Add New Purchase</DialogTitle>
@@ -133,7 +133,7 @@ export default function AddPurchaseButton() {
           <div className="py-4 space-y-4">
             {items.map((item, index) => (
               <div key={index} className="grid grid-cols-12 gap-3 items-end bg-gray-50 p-3 rounded-lg relative">
-                <div className="col-span-5 sm:col-span-5 col-span-12">
+                <div className="col-span-12 sm:col-span-4">
                   <Label htmlFor={`item-name-${index}`}>Item Name</Label>
                   <Input
                     id={`item-name-${index}`}
@@ -143,7 +143,7 @@ export default function AddPurchaseButton() {
                     required
                   />
                 </div>
-                <div className="col-span-3 sm:col-span-3 col-span-6">
+                <div className="col-span-5 sm:col-span-3">
                   <Label htmlFor={`item-category-${index}`}>Category</Label>
                   <Input
                     id={`item-category-${index}`}
@@ -153,7 +153,7 @@ export default function AddPurchaseButton() {
                     required
                   />
                 </div>
-                <div className="col-span-1 sm:col-span-1 col-span-3">
+                <div className="col-span-3 sm:col-span-2">
                   <Label htmlFor={`item-quantity-${index}`}>Qty</Label>
                   <Input
                     id={`item-quantity-${index}`}
@@ -162,9 +162,10 @@ export default function AddPurchaseButton() {
                     value={item.quantity}
                     onChange={(e) => updateItem(index, "quantity", Number.parseInt(e.target.value) || 1)}
                     required
+                    className="text-center"
                   />
                 </div>
-                <div className="col-span-2 sm:col-span-2 col-span-3">
+                <div className="col-span-3 sm:col-span-2">
                   <Label htmlFor={`item-price-${index}`}>Price ($)</Label>
                   <Input
                     id={`item-price-${index}`}
@@ -176,7 +177,7 @@ export default function AddPurchaseButton() {
                     required
                   />
                 </div>
-                <div className="col-span-1">
+                <div className="col-span-1 sm:col-span-1 flex justify-center">
                   <Button
                     type="button"
                     variant="ghost"
