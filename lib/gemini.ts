@@ -5,8 +5,8 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "")
 
 export async function analyzeGroceryPurchases(purchases: any[], userGoal: string) {
   try {
-    // Create a model instance
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" })
+    // Create a model instance - use gemini-1.5-pro which is the latest model
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" })
 
     // Prepare the purchase data for analysis
     const purchaseData = purchases.map((purchase) => {

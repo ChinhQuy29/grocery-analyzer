@@ -41,11 +41,19 @@ export async function POST(request: Request) {
         throw new Error("GEMINI_API_KEY not configured")
       }
 
+      // Try to use Gemini API
       analysisResult = await analyzeGroceryPurchases(JSON.parse(JSON.stringify(purchases)), userGoal)
+      
+      // Verify that the analysis result has the expected format
+      if (!analysisResult || !analysisResult.recommendations || !Array.isArray(analysisResult.recommendations)) {
+        console.warn("Gemini API returned invalid format, using fallback mock data")
+        throw new Error("Invalid response format")
+      }
     } catch (error) {
       console.error("Gemini API error:", error)
-
-      // Fall back to mock recommendations if Gemini API fails
+      console.log("Using fallback mock recommendations")
+      
+      // Always use mock recommendations if there's any error with the Gemini API
       analysisResult = generateMockRecommendations(purchases, userGoal)
     }
 
@@ -123,6 +131,17 @@ function generateMockRecommendations(purchases: any[], userGoal: string) {
           item: "chicken breast or tofu",
           reason: "Protein helps maintain muscle mass during weight loss and increases satiety.",
         },
+        {
+          type: "decrease",
+          category: "sugary drinks",
+          reason: "Liquid calories can add up quickly without providing satiety, making weight loss more difficult.",
+        },
+        {
+          type: "add",
+          category: "whole grains",
+          item: "brown rice or quinoa",
+          reason: "Whole grains provide fiber and nutrients while keeping you fuller longer than refined grains.",
+        },
       ]
       summary =
         "Based on your weight loss goal and recent purchases, we recommend focusing on more vegetables and lean proteins while reducing processed foods and sugary items."
@@ -146,6 +165,18 @@ function generateMockRecommendations(purchases: any[], userGoal: string) {
           category: "complex carbohydrates",
           reason: "Complex carbs provide sustained energy and support muscle glycogen stores.",
         },
+        {
+          type: "add",
+          category: "calorie-dense foods",
+          item: "nut butters or granola",
+          reason: "These foods provide concentrated calories to help you meet your energy needs.",
+        },
+        {
+          type: "increase",
+          category: "dairy products",
+          item: "whole milk or Greek yogurt",
+          reason: "Dairy provides protein, calories, and calcium for muscle and bone health.",
+        },
       ]
       summary =
         "To support your weight gain goal, we recommend increasing your intake of nutrient-dense foods, healthy fats, and protein sources."
@@ -167,6 +198,16 @@ function generateMockRecommendations(purchases: any[], userGoal: string) {
           type: "decrease",
           category: "processed foods",
           reason: "Processed foods often contain additives and preservatives that may impact health.",
+        },
+        {
+          type: "add",
+          category: "whole grains",
+          reason: "Whole grains provide fiber and essential nutrients for overall health.",
+        },
+        {
+          type: "increase",
+          category: "lean proteins",
+          reason: "Adequate protein supports muscle maintenance and overall health.",
         },
       ]
       summary =

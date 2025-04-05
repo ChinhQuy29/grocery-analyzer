@@ -11,6 +11,7 @@ interface PurchaseDocument extends Document {
   userId: string
   date: Date
   items: Array<{
+    _id?: any
     name: string
     category: string
     quantity: number
@@ -40,6 +41,8 @@ export default async function PurchasesPage() {
     _id: purchase._id.toString(),
     date: purchase.date.toISOString(),
     items: purchase.items.map((item) => ({
+      ...item,
+      _id: item._id ? item._id.toString() : undefined,
       name: item.name,
       category: item.category,
       quantity: item.quantity,

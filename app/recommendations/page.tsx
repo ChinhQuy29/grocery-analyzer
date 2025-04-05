@@ -11,6 +11,7 @@ interface RecommendationDocument extends Document {
   userId: string
   date: Date
   recommendations: Array<{
+    _id?: any
     type: "increase" | "decrease" | "add" | "remove"
     category: string
     item?: string
@@ -39,7 +40,10 @@ export default async function RecommendationsPage() {
   const formattedRecommendations = (recommendations as unknown as RecommendationDocument[]).map((recommendation) => ({
     _id: recommendation._id.toString(),
     date: recommendation.date.toISOString(),
-    recommendations: recommendation.recommendations,
+    recommendations: recommendation.recommendations.map(item => ({
+      ...item,
+      _id: item._id ? item._id.toString() : undefined
+    })),
     summary: recommendation.summary,
   }))
 

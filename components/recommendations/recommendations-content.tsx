@@ -1,10 +1,15 @@
 "use client"
 
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { PageHeader } from "@/components/ui/page-header"
 import { formatDistanceToNow } from "date-fns"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { EmptyState } from "@/components/ui/empty-state"
 import { Lightbulb, RefreshCw } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { useToast } from "@/hooks/use-toast"
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
 
 interface RecommendationItem {
   type: "increase" | "decrease" | "add" | "remove"
@@ -25,6 +30,48 @@ interface RecommendationsContentProps {
 }
 
 export function RecommendationsContent({ recommendations }: RecommendationsContentProps) {
+  const router = useRouter()
+  const { toast } = useToast()
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleGenerateRecommendations = async () => {
+    if (isLoading) return // Prevent multiple clicks
+    
+    setIsLoading(true)
+
+    try {
+      const response = await fetch("/api/gemini", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to generate recommendations")
+      }
+
+      toast({
+        title: "Success!",
+        description: "New recommendations generated based on your purchases",
+      })
+
+      // Refresh the page to show new recommendations
+      router.refresh()
+    } catch (error) {
+      console.error("Error generating recommendations:", error)
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to generate recommendations",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   function getTypeColor(type: string): string {
     switch (type) {
       case "increase":
@@ -55,15 +102,34 @@ export function RecommendationsContent({ recommendations }: RecommendationsConte
     }
   }
 
+  // Handle empty clicks when loading
+  const handleClick = () => {
+    if (!isLoading) {
+      handleGenerateRecommendations();
+    }
+  };
+
+  const generateButtonContent = isLoading ? (
+    <>
+      <LoadingSpinner size="sm" className="mr-2" />
+      Generating...
+    </>
+  ) : (
+    <>
+      <RefreshCw className="mr-2 h-4 w-4" />
+      Generate New
+    </>
+  )
+
   return (
     <>
       <PageHeader
         title="Recommendations"
         description="Get personalized recommendations based on your grocery purchases"
         action={{
-          label: "Generate New",
-          icon: <RefreshCw className="mr-2 h-4 w-4" />,
-          onClick: () => {}, // This will be handled by the GenerateRecommendationsButton component
+          label: isLoading ? "Generating..." : "Generate New",
+          icon: isLoading ? <LoadingSpinner size="sm" /> : <RefreshCw className="mr-2 h-4 w-4" />,
+          onClick: handleClick,
         }}
       />
 
@@ -73,8 +139,8 @@ export function RecommendationsContent({ recommendations }: RecommendationsConte
           description="Add more purchases to get personalized recommendations based on your health goals."
           icon={<Lightbulb className="h-8 w-8 text-gray-400" />}
           action={{
-            label: "Generate Recommendations",
-            onClick: () => {}, // This will be handled by the GenerateRecommendationsButton component
+            label: isLoading ? "Generating..." : "Generate Recommendations",
+            onClick: handleClick,
           }}
         />
       ) : (

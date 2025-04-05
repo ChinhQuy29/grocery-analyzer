@@ -11,6 +11,7 @@ interface PurchaseDocument extends Document {
   userId: string
   date: Date
   items: Array<{
+    _id?: any
     name: string
     category: string
     quantity: number
@@ -24,6 +25,7 @@ interface RecommendationDocument extends Document {
   userId: string
   date: Date
   recommendations: Array<{
+    _id?: any
     type: "increase" | "decrease" | "add" | "remove"
     category: string
     item?: string
@@ -61,6 +63,8 @@ export default async function DashboardPage() {
     _id: purchase._id.toString(),
     date: purchase.date.toISOString(),
     items: purchase.items.map((item) => ({
+      ...item,
+      _id: item._id ? item._id.toString() : undefined,
       name: item.name,
       category: item.category,
       quantity: item.quantity,
@@ -73,7 +77,10 @@ export default async function DashboardPage() {
     ? {
         _id: (recommendation as unknown as RecommendationDocument)._id.toString(),
         date: (recommendation as unknown as RecommendationDocument).date.toISOString(),
-        recommendations: (recommendation as unknown as RecommendationDocument).recommendations,
+        recommendations: (recommendation as unknown as RecommendationDocument).recommendations.map(item => ({
+          ...item,
+          _id: item._id ? item._id.toString() : undefined
+        })),
         summary: (recommendation as unknown as RecommendationDocument).summary,
       }
     : null
