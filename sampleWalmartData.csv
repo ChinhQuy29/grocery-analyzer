@@ -1,0 +1,31 @@
+OrderNumber,OrderDate,ItemName,Quantity,UnitPrice,Subtotal,Tax,Total,DeliveryStatus,DeliveryCharges,ProductLink
+2000128-41269916,2025-03-18,"Clorox Disinfecting Bleach, Regular - 81 fl oz",1,3.84,3.84,0.27,4.11,Delivered,0,https://www.walmart.com/ip/Clorox-Disinfecting-Bleach-Regular-81-fl-oz/10811113
+2000128-41269916,2025-03-18,"Fresh Spinach, 10oz",2,1.98,3.96,0.28,4.24,Delivered,0,https://www.walmart.com/ip/Marketside-Fresh-Baby-Spinach-10-oz/121678815
+2000128-41269916,2025-03-18,"Great Value Chunk Light Tuna in Water, 5 oz",4,0.88,3.52,0.25,3.77,Delivered,0,https://www.walmart.com/ip/Great-Value-Chunk-Light-Tuna-in-Water-5-oz/132815800
+2000128-41269916,2025-03-18,"Oreo Chocolate Sandwich Cookies, Family Size - 19.1 oz",1,3.67,3.67,0.26,3.93,Delivered,0,https://www.walmart.com/ip/OREO-Chocolate-Sandwich-Cookies-Family-Size-19-1-oz/197583603
+2000128-41269916,2025-03-18,"Quest Nutrition Protein Bars, 12 ct",1,19.98,19.98,1.40,21.38,Delivered,0,https://www.walmart.com/ip/Quest-Nutrition-Protein-Bars-Birthday-Cake-12-Count/759936826
+2000128-41269916,2025-03-18,"Fresh Hass Avocados, Bag of 6",1,3.28,3.28,0.23,3.51,Delivered,0,https://www.walmart.com/ip/Fresh-Hass-Avocados-Bag-of-6/136148126
+2000128-41359916,2025-03-25,"Great Value Whole Wheat Bread, 20 oz Loaf",2,1.48,2.96,0.21,3.17,Delivered,0,https://www.walmart.com/ip/Great-Value-Whole-Wheat-Bread-20-oz-Loaf/196143447
+2000128-41359916,2025-03-25,"Tyson Boneless Skinless Chicken Breasts, 2.5 lb",1,7.84,7.84,0.55,8.39,Delivered,0,https://www.walmart.com/ip/Tyson-Boneless-Skinless-Chicken-Breasts-2-5-lb-Frozen/22255940
+2000128-41359916,2025-03-25,"Fresh Atlantic Salmon Fillet, 1 lb",1,9.98,9.98,0.70,10.68,Delivered,0,https://www.walmart.com/ip/Fresh-Atlantic-Salmon-Fillet-1-lb/310374419
+2000128-41359916,2025-03-25,"Doritos Nacho Cheese Flavored Chips, 9.75 oz",2,3.98,7.96,0.56,8.52,Delivered,0,https://www.walmart.com/ip/Doritos-Nacho-Cheese-Flavored-Chips-9-75-oz-Bag/194209565
+2000128-41359916,2025-03-25,"Tropicana 100% Orange Juice, 52 fl oz",1,3.48,3.48,0.24,3.72,Delivered,0,https://www.walmart.com/ip/Tropicana-Pure-Premium-Orange-Juice-No-Pulp-52-fl-oz/12444581
+2000128-41359916,2025-03-25,"Lysol All Purpose Cleaner, 32 fl oz",1,2.97,2.97,0.21,3.18,Delivered,0,https://www.walmart.com/ip/Lysol-All-Purpose-Cleaner-Spray-32-Fl-Oz/56749060
+2000128-41359916,2025-03-25,"Campbell's Chicken Noodle Soup, 10.75 oz",3,1.26,3.78,0.26,4.04,Delivered,0,https://www.walmart.com/ip/Campbell-s-Condensed-Chicken-Noodle-Soup-10-75-oz-Can/10315278
+2000128-41359916,2025-03-25,"Coca-Cola Soda Soft Drink, 12 fl oz, 12 Pack",1,5.68,5.68,0.40,6.08,Delivered,0,https://www.walmart.com/ip/Coca-Cola-Soda-Soft-Drink-12-fl-oz-12-Pack/132807895
+2000128-61245916,2025-03-29,"Diet Coke Soda Soft Drink, 12 fl oz, 12 Pack",1,5.68,5.68,0.40,6.08,Shipped,4,https://www.walmart.com/ip/Diet-Coke-Soda-Soft-Drink-12-fl-oz-12-Pack/182361367
+2000128-61245916,2025-03-29,"Sargento Mozzarella String Cheese, 12 Count",1,3.48,3.48,0.24,3.72,Shipped,4,https://www.walmart.com/ip/Sargento-Mozzarella-String-Cheese-Snacks-12-Count-12-oz/10746218
+2000128-61245916,2025-03-29,"Cheerios Whole Grain Oat Cereal, 18 oz",2,3.64,7.28,0.51,7.79,Shipped,4,https://www.walmart.com/ip/Cheerios-Heart-Healthy-Cereal-Gluten-Free-18-oz/36142366
+2000128-61245916,2025-03-29,"Macaroni & Cheese Original Flavor, 7.25 oz, 4 pack",1,4.97,4.97,0.35,5.32,Shipped,4,https://www.walmart.com/ip/Kraft-Original-Macaroni-Cheese-Dinner-5-Pack-7-25-oz-Boxes/21835534
+2000128-61245916,2025-03-29,"Nature's Own 100% Whole Grain Bread, 20oz",1,2.78,2.78,0.19,2.97,Shipped,4,https://www.walmart.com/ip/Nature-s-Own-100-Whole-Grain-Bread-20-oz/36080266
+2000177-71264892,2025-04-02,"Colgate Total Whitening Toothpaste, 6 oz",1,2.96,2.96,0.21,3.17,Shipped,0,https://www.walmart.com/ip/Colgate-Total-Whitening-Gel-Toothpaste-6-oz/10315953
+2000177-71264892,2025-04-02,"Secret Outlast Invisible Solid Antiperspirant & Deodorant, 2.6 oz",1,4.97,4.97,0.35,5.32,Shipped,0,https://www.walmart.com/ip/Secret-Outlast-Invisible-Solid-Antiperspirant-and-Deodorant-Unscented-2-6-oz/300234018
+2000177-71264892,2025-04-02,"Pepsi Soda, 12 fl oz, 12 Pack",1,5.68,5.68,0.40,6.08,Shipped,0,https://www.walmart.com/ip/Pepsi-Soda-12-Fl-Oz-12-Pack/132814133
+2000177-71264892,2025-04-02,"La Croix Sparkling Water, Variety Pack, 12 fl oz, 24 Pack",1,11.98,11.98,0.84,12.82,Shipped,0,https://www.walmart.com/ip/LaCroix-Sparkling-Water-Variety-Pack-12-fl-oz-24-Count/170211665
+2000177-71264892,2025-04-02,"Gillette Fusion5 Men's Razor Blade Refills, 4 ct",1,13.47,13.47,0.94,14.41,Shipped,0,https://www.walmart.com/ip/Gillette-Fusion5-Men-s-Razor-Blade-Refills-4-Count/165316069
+2000177-71264892,2025-04-02,"Huggies Little Snugglers, Size 2, 84 Ct",1,24.94,24.94,1.75,26.69,Shipped,0,https://www.walmart.com/ip/Huggies-Little-Snugglers-Baby-Diapers-Size-2-12-18-lbs-84-ct/291641627
+2000177-71264899,2025-04-07,"Chobani Greek Yogurt, Plain Non-Fat, 32 oz",2,4.48,8.96,0.63,9.59,Delivered,0,https://www.walmart.com/ip/Chobani-Greek-Yogurt-Plain-Non-Fat-32-oz/815770289
+2000177-71264899,2025-04-07,"Kind Bars Variety Pack, 1.4 oz, 6 Count",1,7.94,7.94,0.56,8.50,Delivered,0,https://www.walmart.com/ip/KIND-Bars-Dark-Chocolate-Nuts-Sea-Salt-6-Count-1-4-Oz-each/55076465
+2000177-71264899,2025-04-07,"Windex Original Glass Cleaner, 23 fl oz",1,3.48,3.48,0.24,3.72,Delivered,0,https://www.walmart.com/ip/Windex-Original-Glass-Cleaner-23-fl-oz/16410172
+2000177-71264899,2025-04-07,"Great Value Distilled White Vinegar, 64 fl oz",1,2.48,2.48,0.17,2.65,Delivered,0,https://www.walmart.com/ip/Great-Value-Distilled-White-Vinegar-64-Fl-Oz/139599396
+2000177-71264899,2025-04-07,"Gain Liquid Laundry Detergent, Original Scent, 46 fl oz",1,5.47,5.47,0.38,5.85,Delivered,0,https://www.walmart.com/ip/Gain-Liquid-Laundry-Detergent-Original-Scent-46-fl-oz-2-88-l-30-Loads/15125921
