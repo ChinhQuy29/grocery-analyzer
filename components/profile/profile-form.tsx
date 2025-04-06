@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
+import { Eye, EyeOff } from "lucide-react"
 import { 
   Card, 
   CardContent, 
@@ -76,6 +77,22 @@ export default function ProfileForm({ user }: ProfileFormProps) {
   const [currentPassword, setCurrentPassword] = useState("")
   const [newPassword, setNewPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [activeTab, setActiveTab] = useState("profile")
+
+  // Reset password fields when switching tabs
+  useEffect(() => {
+    if (activeTab !== "password") {
+      setCurrentPassword("")
+      setNewPassword("")
+      setConfirmPassword("")
+      setShowCurrentPassword(false)
+      setShowNewPassword(false)
+      setShowConfirmPassword(false)
+    }
+  }, [activeTab])
 
   // Add state for measurements
   const [measurements, setMeasurements] = useState({
@@ -244,7 +261,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Tabs defaultValue="profile" className="space-y-6">
+      <Tabs defaultValue="profile" className="space-y-6" onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="profile">Basic Info</TabsTrigger>
           <TabsTrigger value="measurements">Measurements</TabsTrigger>
@@ -252,40 +269,40 @@ export default function ProfileForm({ user }: ProfileFormProps) {
         </TabsList>
 
         <TabsContent value="profile" className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="name">Name</Label>
-            <Input 
-              id="name" 
-              value={name} 
-              onChange={(e) => setName(e.target.value)}
-              required 
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input 
-              id="email" 
-              type="email" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)}
-              required 
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="goal">Health Goal</Label>
-            <Select value={goal} onValueChange={setGoal}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select your health goal" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="weight_loss">Weight Loss</SelectItem>
-                <SelectItem value="weight_gain">Weight Gain</SelectItem>
-                <SelectItem value="maintenance">Maintenance</SelectItem>
-                <SelectItem value="health_improvement">General Health Improvement</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="goal">Health Goal</Label>
+              <Select value={goal} onValueChange={setGoal}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select your health goal" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="weight_loss">Weight Loss</SelectItem>
+                  <SelectItem value="weight_gain">Weight Gain</SelectItem>
+                  <SelectItem value="maintenance">Maintenance</SelectItem>
+                  <SelectItem value="health_improvement">General Health Improvement</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </TabsContent>
 
@@ -394,32 +411,67 @@ export default function ProfileForm({ user }: ProfileFormProps) {
         <TabsContent value="password" className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="currentPassword">Current Password</Label>
-            <Input
-              id="currentPassword"
-              type="password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-            />
+            <div className="relative">
+              <Input
+                id="currentPassword"
+                name="currentPassword"
+                type={showCurrentPassword ? "text" : "password"}
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 opacity-75"
+              >
+                {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="newPassword">New Password</Label>
-            <Input
-              id="newPassword"
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
+            <div className="relative">
+              <Input
+                id="newPassword"
+                name="newPassword"
+                type={showNewPassword ? "text" : "password"}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 opacity-75"
+              >
+                {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="confirmPassword">Confirm New Password</Label>
-            <Input
-              id="confirmPassword"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
+            <div className="relative">
+              <Input
+                id="confirmPassword"
+                name="confirmPassword"
+                type={showConfirmPassword ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 opacity-75"
+              >
+                {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
+            {confirmPassword && (
+              <p className={`text-sm ${newPassword === confirmPassword ? "text-green-600" : "text-red-600"}`}>
+                {newPassword === confirmPassword ? "Matches!" : "Uh oh! Your passwords don't match!"}
+              </p>
+            )}
           </div>
         </TabsContent>
       </Tabs>

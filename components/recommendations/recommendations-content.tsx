@@ -138,10 +138,6 @@ export function RecommendationsContent({ recommendations }: RecommendationsConte
           title="No recommendations yet"
           description="Add more purchases to get personalized recommendations based on your health goals."
           icon={<Lightbulb className="h-8 w-8 text-gray-400" />}
-          action={{
-            label: isLoading ? "Generating..." : "Generate Recommendations",
-            onClick: handleClick,
-          }}
         />
       ) : (
         <div className="space-y-6">

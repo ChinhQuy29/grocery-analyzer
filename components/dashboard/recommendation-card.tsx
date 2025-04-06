@@ -64,7 +64,7 @@ export default function RecommendationCard({ recommendation }: RecommendationCar
         <p className="mb-4 text-gray-700">{recommendation.summary}</p>
 
         <div className="space-y-3">
-          {recommendation.recommendations.slice(0, 3).map((item, index) => (
+          {recommendation.recommendations.map((item, index) => (
             <div key={index} className="p-3 bg-gray-50 rounded-lg">
               <div className="flex items-start gap-2">
                 <div className={`p-1 rounded-full ${getTypeColor(item.type)}`}>{getTypeIcon(item.type)}</div>

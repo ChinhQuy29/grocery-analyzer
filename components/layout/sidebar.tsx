@@ -114,11 +114,11 @@ export function Sidebar({ user }: SidebarProps) {
                 </div>
                 <Button
                   variant="outline"
-                  className="w-full justify-start text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
+                  className="w-full justify-center text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
                   onClick={() => signOut({ callbackUrl: "/" })}
                 >
                   <LogOut className="mr-2 h-4 w-4" />
-                  Logout
+                  Log out
                 </Button>
               </div>
             </div>
@@ -163,11 +163,11 @@ export function Sidebar({ user }: SidebarProps) {
           </div>
           <Button
             variant="outline"
-            className="w-full justify-start text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
+            className="w-full justify-center text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
             onClick={() => signOut({ callbackUrl: "/" })}
           >
             <LogOut className="mr-2 h-4 w-4" />
-            Logout
+            Log out
           </Button>
         </div>
       </div>

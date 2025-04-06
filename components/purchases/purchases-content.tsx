@@ -5,7 +5,11 @@ import { formatDistanceToNow } from "date-fns"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { EmptyState } from "@/components/ui/empty-state"
-import { ShoppingBag, Plus } from "lucide-react"
+import { ShoppingBag, Plus, Pencil, Trash2 } from "lucide-react"
+import AddPurchaseButton from "@/components/dashboard/add-purchase-button"
+import { EditPurchaseDialog } from "./edit-purchase-dialog"
+import { DeletePurchaseDialog } from "./delete-purchase-dialog"
+import { Button } from "@/components/ui/button"
 
 interface PurchaseItem {
   name: string
@@ -34,24 +38,24 @@ export function PurchasesContent({ purchases }: PurchasesContentProps) {
         action={{
           label: "Add Purchase",
           icon: <Plus className="mr-2 h-4 w-4" />,
-          onClick: () => {}, // This will be handled by the AddPurchaseButton component
+          onClick: () => document.getElementById("add-purchase-trigger")?.click(),
         }}
       />
+
+      <div className="hidden">
+        <AddPurchaseButton />
+      </div>
 
       {purchases.length === 0 ? (
         <EmptyState
           title="No purchases yet"
           description="Add your first purchase to get started tracking your grocery habits."
           icon={<ShoppingBag className="h-8 w-8 text-gray-400" />}
-          action={{
-            label: "Add Purchase",
-            onClick: () => {}, // This will be handled by the AddPurchaseButton component
-          }}
         />
       ) : (
         <div className="space-y-6">
           {purchases.map((purchase) => (
-            <Card key={purchase._id} className="overflow-hidden">
+            <Card key={purchase._id} className="overflow-hidden group">
               <CardContent className="p-0">
                 <div className="p-6 border-b">
                   <div className="flex justify-between items-center">
@@ -63,7 +67,35 @@ export function PurchasesContent({ purchases }: PurchasesContentProps) {
                         {purchase.items.length} {purchase.items.length === 1 ? "item" : "items"}
                       </p>
                     </div>
-                    <p className="font-bold text-xl">${purchase.totalAmount.toFixed(2)}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-bold text-xl">${purchase.totalAmount.toFixed(2)}</p>
+                      <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+                        <DeletePurchaseDialog
+                          purchaseId={purchase._id}
+                          trigger={
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          }
+                        />
+                        <EditPurchaseDialog
+                          purchase={purchase}
+                          trigger={
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                          }
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className="p-6 bg-gray-50">

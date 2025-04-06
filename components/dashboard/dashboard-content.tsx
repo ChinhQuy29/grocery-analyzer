@@ -50,11 +50,6 @@ export function DashboardContent({ purchases, recommendation, userGoal }: Dashbo
       <PageHeader
         title="Dashboard"
         description="Track your grocery purchases and get personalized recommendations"
-        action={{
-          label: "Add Purchase",
-          icon: <Plus className="mr-2 h-4 w-4" />,
-          onClick: () => document.getElementById("add-purchase-trigger")?.click(),
-        }}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -71,23 +66,10 @@ export function DashboardContent({ purchases, recommendation, userGoal }: Dashbo
                   title="No purchases yet"
                   description="Add your first purchase to get started tracking your grocery habits."
                   icon={<ShoppingBag className="h-6 w-6 text-gray-400" />}
-                  action={{
-                    label: "Add Purchase",
-                    onClick: () => document.getElementById("add-purchase-trigger")?.click(),
-                  }}
                 />
               ) : (
                 <PurchaseList purchases={purchases} />
               )}
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">Purchase Analytics</h2>
-              <div className="h-64 flex items-center justify-center bg-gray-100 rounded-lg">
-                <p className="text-gray-500">Purchase analytics will appear here</p>
-              </div>
             </CardContent>
           </Card>
         </div>

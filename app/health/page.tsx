@@ -44,7 +44,12 @@ export default function HealthChat() {
   const [warningMessage, setWarningMessage] = useState("")
   const [usePurchaseContext, setUsePurchaseContext] = useState(false)
   const [useMeasurementsContext, setUseMeasurementsContext] = useState(false)
-  const [showDisclaimerAlert, setShowDisclaimerAlert] = useState(true)
+  const [showDisclaimerAlert, setShowDisclaimerAlert] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('hideDisclaimer') !== 'true'
+    }
+    return true
+  })
   const [showPurchaseToggle, setShowPurchaseToggle] = useState(true)
   const [showMeasurementsToggle, setShowMeasurementsToggle] = useState(true)
   const [showFooterDisclaimer, setShowFooterDisclaimer] = useState(true)
@@ -150,6 +155,13 @@ export default function HealthChat() {
     return `calc(100vh - ${12 + alertHeight + footerHeight}rem)`;
   };
 
+  const handleCloseDisclaimer = () => {
+    setShowDisclaimerAlert(false)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('hideDisclaimer', 'true')
+    }
+  }
+
   return (
     <div className="flex flex-col h-screen overflow-hidden pt-6 px-4 pb-4">
       <PageHeader
@@ -161,98 +173,94 @@ export default function HealthChat() {
       <div className="space-y-2 mb-4">
         {showDisclaimerAlert && (
           <Alert className="bg-blue-50 border-blue-200 relative py-2">
-            <InfoIcon className="h-4 w-4 text-blue-600" />
-            <AlertDescription className="text-blue-700 pr-8 text-sm">
-              This AI Health Advisor provides general wellness information only. It cannot provide medical diagnoses or advice on serious health conditions.
-            </AlertDescription>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-6 w-6 absolute top-1 right-1 text-blue-500 hover:text-blue-700 hover:bg-blue-100"
-              onClick={() => setShowDisclaimerAlert(false)}
-            >
-              <X className="h-3 w-3" />
-              <span className="sr-only">Close</span>
-            </Button>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <InfoIcon className="h-4 w-4 text-blue-600 mr-2" />
+                <AlertDescription className="text-blue-700 text-sm">
+                  This AI Health Advisor provides general wellness information only. It cannot provide medical diagnoses or advice on serious health conditions.
+                </AlertDescription>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-6 w-6 text-blue-500 hover:text-blue-700 hover:bg-blue-100"
+                onClick={handleCloseDisclaimer}
+              >
+                <X className="h-3 w-3" />
+                <span className="sr-only">Close</span>
+              </Button>
+            </div>
           </Alert>
         )}
         
         {showWarning && (
           <Alert className="bg-amber-50 border-amber-200 relative py-2">
-            <AlertTriangle className="h-4 w-4 text-amber-600" />
-            <AlertDescription className="text-amber-700 pr-8 text-sm">
-              {warningMessage}
-            </AlertDescription>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-6 w-6 absolute top-1 right-1 text-amber-500 hover:text-amber-700 hover:bg-amber-100"
-              onClick={() => setShowWarning(false)}
-            >
-              <X className="h-3 w-3" />
-              <span className="sr-only">Close</span>
-            </Button>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <AlertTriangle className="h-4 w-4 text-amber-600 mr-2" />
+                <AlertDescription className="text-amber-700 text-sm">
+                  {warningMessage}
+                </AlertDescription>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-6 w-6 text-amber-500 hover:text-amber-700 hover:bg-amber-100"
+                onClick={() => setShowWarning(false)}
+              >
+                <X className="h-3 w-3" />
+                <span className="sr-only">Close</span>
+              </Button>
+            </div>
           </Alert>
         )}
 
         {showMeasurementsToggle && (
-          <div className="flex items-center space-x-2 bg-purple-50 p-2 rounded-lg border border-purple-200 relative">
-            <UserIcon className="h-4 w-4 text-purple-600" />
-            <div className="flex-1">
-              <p className="text-sm text-purple-700">
-                Use your measurements for personalized advice
-              </p>
-            </div>
-            <div className="flex items-center space-x-2 pr-6">
-              <Switch
-                id="use-measurements-context"
-                checked={useMeasurementsContext}
-                onCheckedChange={setUseMeasurementsContext}
-              />
-              <Label htmlFor="use-measurements-context" className="text-sm text-purple-700">
-                {useMeasurementsContext ? "On" : "Off"}
-              </Label>
-            </div>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-6 w-6 absolute top-1 right-1 text-purple-500 hover:text-purple-700 hover:bg-purple-100"
-              onClick={() => setShowMeasurementsToggle(false)}
-            >
-              <X className="h-3 w-3" />
-              <span className="sr-only">Close</span>
-            </Button>
-          </div>
+          <Card className="border-purple-200">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 bg-purple-100 rounded-full">
+                    <UserIcon className="h-4 w-4 text-purple-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-purple-900">Use Measurements</h3>
+                    <p className="text-xs text-purple-700">Enable personalized advice based on your measurements</p>
+                  </div>
+                </div>
+                <Switch
+                  id="use-measurements-context"
+                  checked={useMeasurementsContext}
+                  onCheckedChange={setUseMeasurementsContext}
+                  className="data-[state=checked]:bg-purple-600"
+                />
+              </div>
+            </CardContent>
+          </Card>
         )}
 
         {showPurchaseToggle && (
-          <div className="flex items-center space-x-2 bg-green-50 p-2 rounded-lg border border-green-200 relative">
-            <ShoppingCart className="h-4 w-4 text-green-600" />
-            <div className="flex-1">
-              <p className="text-sm text-green-700">
-                Use purchase history for personalized advice
-              </p>
-            </div>
-            <div className="flex items-center space-x-2 pr-6">
-              <Switch
-                id="use-purchase-context"
-                checked={usePurchaseContext}
-                onCheckedChange={setUsePurchaseContext}
-              />
-              <Label htmlFor="use-purchase-context" className="text-sm text-green-700">
-                {usePurchaseContext ? "On" : "Off"}
-              </Label>
-            </div>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-6 w-6 absolute top-1 right-1 text-green-500 hover:text-green-700 hover:bg-green-100"
-              onClick={() => setShowPurchaseToggle(false)}
-            >
-              <X className="h-3 w-3" />
-              <span className="sr-only">Close</span>
-            </Button>
-          </div>
+          <Card className="border-green-200">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 bg-green-100 rounded-full">
+                    <ShoppingCart className="h-4 w-4 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-green-900">Use Purchase History</h3>
+                    <p className="text-xs text-green-700">Enable personalized advice based on your purchase history</p>
+                  </div>
+                </div>
+                <Switch
+                  id="use-purchase-context"
+                  checked={usePurchaseContext}
+                  onCheckedChange={setUsePurchaseContext}
+                  className="data-[state=checked]:bg-green-600"
+                />
+              </div>
+            </CardContent>
+          </Card>
         )}
       </div>
       
