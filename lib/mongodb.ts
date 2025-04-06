@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 
 // Use direct connection string for immediate testing
-const MONGODB_URI = "mongodb+srv://quychinh:5CPKDgtaL4XqyiBH@1stprojectmern.wtzu6.mongodb.net/?retryWrites=true&w=majority&appName=1stProjectMERN"
+const MONGODB_URI = process.env.MONGODB_URI!
 
 // Keep track of the connection status
 let isConnected = false

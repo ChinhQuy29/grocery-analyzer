@@ -173,8 +173,61 @@ const recommendationSchema = new Schema(
   { timestamps: true },
 )
 
+// Recipe Schema
+const recipeSchema = new Schema(
+  {
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    recipeId: {
+      type: String,
+      required: true,
+    },
+    title: {
+      type: String,
+      required: true,
+    },
+    image: {
+      type: String,
+      required: true,
+    },
+    readyInMinutes: {
+      type: Number,
+      required: true,
+    },
+    servings: {
+      type: Number,
+      required: true,
+    },
+    sourceUrl: {
+      type: String,
+      required: true,
+    },
+    summary: {
+      type: String,
+      required: true,
+    },
+    ingredients: [String],
+    instructions: [String],
+    matchingIngredients: [String],
+    missingIngredients: [String],
+    aiRecommendation: {
+      type: String,
+      required: true,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  { timestamps: true },
+)
+
 export const User = models.User || model("User", userSchema)
 export const Purchase = models.Purchase || model("Purchase", purchaseSchema)
 export const Recommendation = models.Recommendation || model("Recommendation", recommendationSchema)
 export const Measurement = models.Measurement || model("Measurement", measurementSchema)
+export const Recipe = models.Recipe || model("Recipe", recipeSchema)
 
