@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { connectToDatabase } from "@/lib/mongodb"
-import { Purchase, Recommendation } from "@/lib/models"
+import { Purchase, Recommendation, Measurement, User } from "@/lib/models"
 import { analyzeGroceryPurchases } from "@/lib/gemini"
 
 export async function POST(request: Request) {
@@ -18,6 +18,20 @@ export async function POST(request: Request) {
 
     // Get user's goal
     const userGoal = session.user.goal || "health_improvement"
+
+    // Fetch user measurements from the new Measurement model
+    const measurementDoc = await Measurement.findOne({ userId: session.user.id })
+    
+    // Format measurements properly for the Gemini API
+    const userMeasurements = measurementDoc ? {
+      height: measurementDoc.height,
+      weight: measurementDoc.weight,
+      age: measurementDoc.age,
+      gender: measurementDoc.gender,
+      activityLevel: measurementDoc.activityLevel
+    } : undefined
+    
+    console.log("User measurements for Gemini:", userMeasurements)
 
     // Fetch user's purchases (last 30 days)
     const thirtyDaysAgo = new Date()
@@ -42,7 +56,7 @@ export async function POST(request: Request) {
       }
 
       // Try to use Gemini API
-      analysisResult = await analyzeGroceryPurchases(JSON.parse(JSON.stringify(purchases)), userGoal)
+      analysisResult = await analyzeGroceryPurchases(JSON.parse(JSON.stringify(purchases)), userGoal, userMeasurements)
       
       // Verify that the analysis result has the expected format
       if (!analysisResult || !analysisResult.recommendations || !Array.isArray(analysisResult.recommendations)) {
@@ -54,7 +68,7 @@ export async function POST(request: Request) {
       console.log("Using fallback mock recommendations")
       
       // Always use mock recommendations if there's any error with the Gemini API
-      analysisResult = generateMockRecommendations(purchases, userGoal)
+      analysisResult = generateMockRecommendations(purchases, userGoal, userMeasurements)
     }
 
     // Save recommendation to database
@@ -83,7 +97,7 @@ export async function POST(request: Request) {
 }
 
 // Mock recommendation generator as fallback
-function generateMockRecommendations(purchases: any[], userGoal: string) {
+function generateMockRecommendations(purchases: any[], userGoal: string, userMeasurements?: any) {
   // Extract items from purchases
   const allItems = purchases.flatMap((purchase) => purchase.items)
 
@@ -107,6 +121,16 @@ function generateMockRecommendations(purchases: any[], userGoal: string) {
       itemCount: items.length,
     }
   })
+
+  // Additional context based on measurements if available
+  let measurementContext = ""
+  if (userMeasurements?.weight && userMeasurements?.height) {
+    measurementContext = `based on your measurements (${userMeasurements.height.value} ${userMeasurements.height.unit}, ${userMeasurements.weight.value} ${userMeasurements.weight.unit})`;
+    
+    if (userMeasurements.age) {
+      measurementContext += ` and age (${userMeasurements.age})`;
+    }
+  }
 
   let recommendations = []
   let summary = ""
@@ -144,7 +168,7 @@ function generateMockRecommendations(purchases: any[], userGoal: string) {
         },
       ]
       summary =
-        "Based on your weight loss goal and recent purchases, we recommend focusing on more vegetables and lean proteins while reducing processed foods and sugary items."
+        `Based on your weight loss goal ${measurementContext}, we recommend focusing on more vegetables and lean proteins while reducing processed foods and sugary items.`
       break
 
     case "weight_gain":
@@ -179,7 +203,7 @@ function generateMockRecommendations(purchases: any[], userGoal: string) {
         },
       ]
       summary =
-        "To support your weight gain goal, we recommend increasing your intake of nutrient-dense foods, healthy fats, and protein sources."
+        `To support your weight gain goal ${measurementContext}, we recommend increasing your intake of nutrient-dense foods, healthy fats, and protein sources.`
       break
 
     default: // health_improvement or maintenance
@@ -211,7 +235,7 @@ function generateMockRecommendations(purchases: any[], userGoal: string) {
         },
       ]
       summary =
-        "To improve your overall health, we recommend increasing your consumption of whole foods, particularly fruits and vegetables, while reducing processed items."
+        `To improve your overall health ${measurementContext}, we recommend increasing your consumption of whole foods, particularly fruits and vegetables, while reducing processed items.`
   }
 
   return {

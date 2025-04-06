@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { InfoIcon, AlertTriangle, ShoppingCart, X } from "lucide-react"
+import { InfoIcon, AlertTriangle, ShoppingCart, X, UserIcon } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 
@@ -43,8 +43,10 @@ export default function HealthChat() {
   const [showWarning, setShowWarning] = useState(false)
   const [warningMessage, setWarningMessage] = useState("")
   const [usePurchaseContext, setUsePurchaseContext] = useState(false)
+  const [useMeasurementsContext, setUseMeasurementsContext] = useState(false)
   const [showDisclaimerAlert, setShowDisclaimerAlert] = useState(true)
   const [showPurchaseToggle, setShowPurchaseToggle] = useState(true)
+  const [showMeasurementsToggle, setShowMeasurementsToggle] = useState(true)
   const [showFooterDisclaimer, setShowFooterDisclaimer] = useState(true)
   const scrollAreaRef = useRef<HTMLDivElement>(null)
   
@@ -98,7 +100,8 @@ export default function HealthChat() {
         body: JSON.stringify({
           message,
           chatHistory: apiChatHistory,
-          usePurchaseContext
+          usePurchaseContext,
+          useMeasurementsContext
         }),
       })
       
@@ -137,6 +140,7 @@ export default function HealthChat() {
     if (showDisclaimerAlert) visibleAlerts++;
     if (showWarning) visibleAlerts++;
     if (showPurchaseToggle) visibleAlerts++;
+    if (showMeasurementsToggle) visibleAlerts++;
     
     const alertHeight = visibleAlerts * 4; // Each alert is roughly 4rem in height
     
@@ -189,6 +193,36 @@ export default function HealthChat() {
               <span className="sr-only">Close</span>
             </Button>
           </Alert>
+        )}
+
+        {showMeasurementsToggle && (
+          <div className="flex items-center space-x-2 bg-purple-50 p-2 rounded-lg border border-purple-200 relative">
+            <UserIcon className="h-4 w-4 text-purple-600" />
+            <div className="flex-1">
+              <p className="text-sm text-purple-700">
+                Use your measurements for personalized advice
+              </p>
+            </div>
+            <div className="flex items-center space-x-2 pr-6">
+              <Switch
+                id="use-measurements-context"
+                checked={useMeasurementsContext}
+                onCheckedChange={setUseMeasurementsContext}
+              />
+              <Label htmlFor="use-measurements-context" className="text-sm text-purple-700">
+                {useMeasurementsContext ? "On" : "Off"}
+              </Label>
+            </div>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-6 w-6 absolute top-1 right-1 text-purple-500 hover:text-purple-700 hover:bg-purple-100"
+              onClick={() => setShowMeasurementsToggle(false)}
+            >
+              <X className="h-3 w-3" />
+              <span className="sr-only">Close</span>
+            </Button>
+          </div>
         )}
 
         {showPurchaseToggle && (

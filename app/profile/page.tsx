@@ -23,50 +23,39 @@ export default async function ProfilePage() {
     return null
   }
 
+  // Debug logging
+  console.log("User from DB:", JSON.stringify(user.toObject(), null, 2))
+
+  // Format user data for the form - convert Mongoose document to plain object
+  const formattedUser = {
+    _id: user._id.toString(),
+    name: user.name,
+    email: user.email,
+    goal: user.goal,
+    measurements: user.measurements ? user.toObject().measurements : undefined
+  }
+
+  console.log("Formatted user data for form:", JSON.stringify(formattedUser, null, 2))
+
   return (
     <DashboardLayout>
-      <PageHeader title="Profile Settings" description="Manage your account information and preferences" />
+      <PageHeader
+        title="Profile"
+        description="Manage your account settings and preferences"
+      />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>Personal Information</CardTitle>
-              <CardDescription>Update your personal information and preferences</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ProfileForm user={JSON.parse(JSON.stringify(user))} />
-            </CardContent>
-          </Card>
-        </div>
-
-        <div>
-          <Card>
-            <CardHeader>
-              <CardTitle>Account Summary</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <p className="text-sm text-gray-500">Name</p>
-                  <p className="font-medium">{user.name}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Email</p>
-                  <p className="font-medium">{user.email}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Health Goal</p>
-                  <p className="font-medium capitalize">{user.goal?.replace("_", " ")}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Member Since</p>
-                  <p className="font-medium">{new Date(user.createdAt).toLocaleDateString()}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Personal Information</CardTitle>
+            <CardDescription>
+              Update your personal information and account settings
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ProfileForm user={formattedUser} />
+          </CardContent>
+        </Card>
       </div>
     </DashboardLayout>
   )

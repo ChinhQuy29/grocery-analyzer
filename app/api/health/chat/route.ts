@@ -3,7 +3,26 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { GoogleGenerativeAI } from "@google/generative-ai"
 import { connectToDatabase } from "@/lib/mongodb"
-import { Purchase } from "@/lib/models"
+import { Purchase, Measurement } from "@/lib/models"
+
+// Define interfaces for measurements
+interface HeightMeasurement {
+  value: number | null;
+  unit: "cm" | "in";
+}
+
+interface WeightMeasurement {
+  value: number | null;
+  unit: "kg" | "lb";
+}
+
+interface UserMeasurements {
+  height: HeightMeasurement | null;
+  weight: WeightMeasurement | null;
+  age: number | null;
+  gender: string | null;
+  activityLevel: string | null;
+}
 
 // Initialize the Gemini API client
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "")
@@ -100,6 +119,34 @@ async function getUserPurchaseHistory(userId: string) {
   }
 }
 
+// Function to fetch user's measurements
+async function getUserMeasurements(userId: string): Promise<UserMeasurements | null> {
+  try {
+    await connectToDatabase()
+    
+    const measurementsDoc = await Measurement.findOne({ userId }).lean()
+    
+    if (!measurementsDoc) {
+      return null
+    }
+    
+    // Use type assertion to handle the Mongoose document
+    const measurements = measurementsDoc as any
+    
+    // Convert to a properly typed object
+    return {
+      height: measurements.height || null,
+      weight: measurements.weight || null,
+      age: measurements.age || null,
+      gender: measurements.gender || null,
+      activityLevel: measurements.activityLevel || null
+    }
+  } catch (error) {
+    console.error("Error fetching user measurements:", error)
+    return null
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions)
@@ -110,7 +157,7 @@ export async function POST(request: Request) {
 
     // Parse request body
     const body = await request.json()
-    const { message, chatHistory, usePurchaseContext } = body
+    const { message, chatHistory, usePurchaseContext, useMeasurementsContext } = body
 
     if (!message) {
       return NextResponse.json({ message: "Message is required" }, { status: 400 })
@@ -136,6 +183,12 @@ export async function POST(request: Request) {
     let purchaseHistory = null
     if (usePurchaseContext) {
       purchaseHistory = await getUserPurchaseHistory(session.user.id)
+    }
+
+    // Fetch user measurements if enabled
+    let userMeasurements = null
+    if (useMeasurementsContext) {
+      userMeasurements = await getUserMeasurements(session.user.id)
     }
 
     // Create chat history for the model
@@ -178,6 +231,20 @@ export async function POST(request: Request) {
     - Encourage proper medical care for any concerning symptoms
     `
 
+    // Add user measurements context if available
+    if (useMeasurementsContext && userMeasurements) {
+      systemPrompt += `
+      
+      USER MEASUREMENTS CONTEXT:
+      The user has provided the following health information that you can use for more personalized advice:
+      ${JSON.stringify(userMeasurements, null, 2)}
+      
+      Use this information to tailor your wellness recommendations more specifically to their body composition, age, gender, 
+      and activity level. For example, you can provide more appropriate caloric intake suggestions, exercise recommendations, 
+      and nutritional advice based on their specific measurements. Always be sensitive when discussing body measurements.
+      `
+    }
+
     // Add purchase history context if enabled
     if (usePurchaseContext && purchaseHistory) {
       systemPrompt += `
@@ -202,9 +269,17 @@ export async function POST(request: Request) {
     let result
     if (chatHistory && chatHistory.length > 0) {
       // If there's existing chat history, we need to send a reminder of restrictions
-      const reminderPrefix = usePurchaseContext 
-        ? `Remember, you are a health advisor with access to the user's purchase history. You can provide personalized wellness advice based on their grocery habits, but cannot provide medical diagnoses or advice on restricted topics.` 
-        : `Remember, you are a health advisor and can only provide general wellness information. You cannot provide medical diagnoses or advice on restricted topics.`
+      let reminderPrefix = `Remember, you are a health advisor`
+      
+      if (useMeasurementsContext && userMeasurements) {
+        reminderPrefix += ` with access to the user's personal measurements`
+      }
+      
+      if (usePurchaseContext) {
+        reminderPrefix += ` with access to the user's purchase history`
+      }
+      
+      reminderPrefix += `. You can provide personalized wellness advice, but cannot provide medical diagnoses or advice on restricted topics.`
       
       result = await chat.sendMessage(`${reminderPrefix}
 

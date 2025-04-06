@@ -36,6 +36,7 @@ export const authOptions: NextAuthOptions = {
           email: user.email,
           name: user.name,
           goal: user.goal,
+          measurements: user.measurements || undefined,
         }
       },
     }),
@@ -57,6 +58,7 @@ export const authOptions: NextAuthOptions = {
         token.goal = user.goal
         token.name = user.name
         token.email = user.email
+        token.measurements = user.measurements
       }
       
       // Handle updates to the session
@@ -64,6 +66,7 @@ export const authOptions: NextAuthOptions = {
         if (session.goal) token.goal = session.goal
         if (session.name) token.name = session.name
         if (session.email) token.email = session.email
+        if (session.measurements) token.measurements = session.measurements
       }
       
       return token
@@ -74,6 +77,7 @@ export const authOptions: NextAuthOptions = {
         session.user.goal = token.goal as string
         session.user.name = token.name as string
         session.user.email = token.email as string
+        session.user.measurements = token.measurements
       }
       return session
     },
