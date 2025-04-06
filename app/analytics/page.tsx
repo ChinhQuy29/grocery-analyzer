@@ -80,10 +80,24 @@ export default async function AnalyticsPage() {
     return acc
   }, {})
 
-  // Calculate spending trends
+  // Format data for charts
+  const categoryData = Object.entries(categorySpending).map(([name, value]) => ({
+    name,
+    value: value as number,
+    formattedValue: `$${(value as number).toFixed(2)}`
+  }))
+
+  const nutritionalDataArray = Object.entries(nutritionalData).map(([name, value]) => ({
+    name,
+    value: value as number,
+    formattedValue: `${(value as number).toFixed(2)}`
+  }))
+
+  // Format monthly spending data
   const monthlySpendingArray = Object.entries(monthlySpending).map(([month, amount]) => ({
     month,
     amount: amount as number,
+    formattedAmount: `$${(amount as number).toFixed(2)}`
   }))
 
   const totalSpent = monthlySpendingArray.reduce((sum, { amount }) => sum + amount, 0)
@@ -91,17 +105,6 @@ export default async function AnalyticsPage() {
   const lastMonthSpent = monthlySpendingArray[monthlySpendingArray.length - 1]?.amount || 0
   const previousMonthSpent = monthlySpendingArray[monthlySpendingArray.length - 2]?.amount || 0
   const spendingChange = ((lastMonthSpent - previousMonthSpent) / previousMonthSpent) * 100
-
-  // Format data for charts
-  const categoryData = Object.entries(categorySpending).map(([name, value]) => ({
-    name,
-    value: value as number,
-  }))
-
-  const nutritionalDataArray = Object.entries(nutritionalData).map(([name, value]) => ({
-    name,
-    value: value as number,
-  }))
 
   return (
     <DashboardLayout>
@@ -172,7 +175,6 @@ export default async function AnalyticsPage() {
               index="month"
               categories={["amount"]}
               colors={["blue"]}
-              valueFormatter={(value) => `$${value.toFixed(2)}`}
               showLegend={false}
               showGridLines={false}
             />
@@ -189,7 +191,6 @@ export default async function AnalyticsPage() {
               data={categoryData}
               category="value"
               index="name"
-              valueFormatter={(value) => `$${value.toFixed(2)}`}
               colors={["blue", "cyan", "indigo", "violet", "fuchsia"]}
             />
           </CardContent>

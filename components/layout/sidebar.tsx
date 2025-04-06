@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { signOut } from "next-auth/react"
-import { BarChart3, Home, LogOut, ShoppingBag, User2, Lightbulb, Menu } from "lucide-react"
+import { BarChart3, Home, LogOut, ShoppingBag, User2, Lightbulb, Menu, Heart } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -36,16 +36,22 @@ export function Sidebar({ user }: SidebarProps) {
       active: pathname === "/recommendations",
     },
     {
-      label: "Profile",
-      icon: User2,
-      href: "/profile",
-      active: pathname === "/profile",
+      label: "Health Advisor",
+      icon: Heart,
+      href: "/health",
+      active: pathname === "/health",
     },
     {
       label: "Analytics",
       icon: BarChart3,
       href: "/analytics",
       active: pathname === "/analytics",
+    },
+    {
+      label: "Profile",
+      icon: User2,
+      href: "/profile",
+      active: pathname === "/profile",
     },
   ]
 

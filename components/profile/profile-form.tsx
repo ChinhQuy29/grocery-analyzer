@@ -4,6 +4,7 @@ import type React from "react"
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { signOut, useSession } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -23,6 +24,7 @@ interface ProfileFormProps {
 export default function ProfileForm({ user }: ProfileFormProps) {
   const router = useRouter()
   const { toast } = useToast()
+  const { update: updateSession } = useSession()
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
     name: user.name,
@@ -89,6 +91,8 @@ export default function ProfileForm({ user }: ProfileFormProps) {
         throw new Error(error.message || "Failed to update profile")
       }
 
+      const data = await response.json()
+
       // Reset password fields
       setFormData((prev) => ({
         ...prev,
@@ -97,11 +101,19 @@ export default function ProfileForm({ user }: ProfileFormProps) {
         confirmPassword: "",
       }))
 
+      // Update the session to reflect the new user data
+      await updateSession({
+        name: formData.name,
+        email: formData.email,
+        goal: formData.goal,
+      })
+
       toast({
         title: "Profile updated",
         description: "Your profile has been updated successfully",
       })
 
+      // Force a refresh to make sure all components re-render with the new data
       router.refresh()
     } catch (error) {
       toast({

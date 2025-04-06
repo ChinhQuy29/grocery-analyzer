@@ -53,7 +53,7 @@ export function DashboardContent({ purchases, recommendation, userGoal }: Dashbo
         action={{
           label: "Add Purchase",
           icon: <Plus className="mr-2 h-4 w-4" />,
-          onClick: () => {}, // This will be handled by the AddPurchaseButton component
+          onClick: () => document.getElementById("add-purchase-trigger")?.click(),
         }}
       />
 
@@ -73,7 +73,7 @@ export function DashboardContent({ purchases, recommendation, userGoal }: Dashbo
                   icon={<ShoppingBag className="h-6 w-6 text-gray-400" />}
                   action={{
                     label: "Add Purchase",
-                    onClick: () => {}, // This will be handled by the AddPurchaseButton component
+                    onClick: () => document.getElementById("add-purchase-trigger")?.click(),
                   }}
                 />
               ) : (

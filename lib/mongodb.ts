@@ -1,41 +1,33 @@
 import mongoose from "mongoose"
 
-const MONGODB_URI = process.env.MONGODB_URI
+// Use direct connection string for immediate testing
+const MONGODB_URI = "mongodb+srv://quychinh:5CPKDgtaL4XqyiBH@1stprojectmern.wtzu6.mongodb.net/?retryWrites=true&w=majority&appName=1stProjectMERN"
 
-if (!MONGODB_URI) {
-  throw new Error("Please define the MONGODB_URI environment variable")
-}
-
-let cached = global.mongoose
-
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null }
-}
+// Keep track of the connection status
+let isConnected = false
 
 export async function connectToDatabase() {
-  if (cached.conn) {
-    return cached.conn
+  // If already connected, return
+  if (isConnected) {
+    return
   }
 
-  if (!cached.promise) {
-    const opts = {
+  try {
+    const options = {
       bufferCommands: false,
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
     }
 
-    cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
-      return mongoose
-    })
+    // Connect to MongoDB
+    await mongoose.connect(MONGODB_URI, options)
+    
+    isConnected = true
+    console.log("Connected to MongoDB")
+    
+  } catch (error) {
+    console.error("MongoDB connection error:", error)
+    throw error
   }
-
-  try {
-    cached.conn = await cached.promise
-  } catch (e) {
-    cached.promise = null
-    throw e
-  }
-
-  return cached.conn
 }
 

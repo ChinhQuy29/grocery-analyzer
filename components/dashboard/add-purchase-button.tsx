@@ -120,7 +120,7 @@ export default function AddPurchaseButton() {
       }}
     >
       <DialogTrigger asChild>
-        <Button className="bg-green-600 hover:bg-green-700">
+        <Button id="add-purchase-trigger" className="bg-green-600 hover:bg-green-700">
           <Plus className="mr-2 h-4 w-4" /> Add Purchase
         </Button>
       </DialogTrigger>

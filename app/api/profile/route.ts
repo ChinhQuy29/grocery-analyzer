@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth"
 import { connectToDatabase } from "@/lib/mongodb"
 import { User } from "@/lib/models"
 import { compare, hash } from "bcryptjs"
+import { getToken } from "next-auth/jwt"
 
 export async function PUT(request: Request) {
   try {
@@ -62,15 +63,20 @@ export async function PUT(request: Request) {
 
     await user.save()
 
-    return NextResponse.json({
-      message: "Profile updated successfully",
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        goal: user.goal,
-      },
-    })
+    // Return a response with a special header to trigger the client to call the session endpoint
+    // This will force the session to be refreshed on the client side
+    return NextResponse.json(
+      {
+        message: "Profile updated successfully",
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          goal: user.goal,
+        },
+        sessionExpired: true,  // This flag tells the client to refresh auth state
+      }
+    )
   } catch (error) {
     console.error("Update profile error:", error)
     return NextResponse.json({ message: "An error occurred while updating profile" }, { status: 500 })

@@ -50,17 +50,30 @@ export const authOptions: NextAuthOptions = {
     error: "/auth/error",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
+      // Initial sign in
       if (user) {
         token.id = user.id
         token.goal = user.goal
+        token.name = user.name
+        token.email = user.email
       }
+      
+      // Handle updates to the session
+      if (trigger === "update" && session) {
+        if (session.goal) token.goal = session.goal
+        if (session.name) token.name = session.name
+        if (session.email) token.email = session.email
+      }
+      
       return token
     },
     async session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id as string
         session.user.goal = token.goal as string
+        session.user.name = token.name as string
+        session.user.email = token.email as string
       }
       return session
     },
